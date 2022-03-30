@@ -3,11 +3,20 @@ import pickle
 import pandas as pd
 import plotly.express as px
 from babel.numbers import format_currency
+from PIL import Image
 data=pd.read_csv("cleaned.csv")
 model = pickle.load(open('model_pkl','rb'))
 # Create a page dropdown
-page = st.sidebar.selectbox("Select One", ["Predict Price", "Explore",'Creator'])
+image = Image.open('logo.jpg')
+st.sidebar.image(image,width=124)
+st.sidebar.title("ChennaiHomes")
+page = st.sidebar.selectbox("Select One", ['Home',"Predict Price", "Explore",'Creator'])
+if page == "Home":
+    st.image(image,width=200)
+    st.title('Welcome to ChennaiHomes')
+    st.subheader('ChennaiHomes is a place where you can explore the statistics of Sales happened in Chennai over the years 2013-2017 and also predict the price range of your Dream Homes')
 if page == "Predict Price":
+    st.image(image,width=200)
     st.title('Price Prediction')
     AREA = st.selectbox("Select an Area ",data.AREA.unique())
     if AREA == 'Chrompet':
@@ -29,7 +38,7 @@ if page == "Predict Price":
 
     N_BEDROOM = st.slider("No of Bedrooms",int(data.N_BEDROOM.min()),int(data.N_BEDROOM.max()))
 
-    N_BATHROOM = st.slider("No of Bathrooms",int(data.N_BATHROOM.min()),int(data.N_BATHROOM.max()))
+    N_BATHROOM = st.radio("No of Bathrooms",data.N_BATHROOM.unique())
 
     N_ROOM = st.slider("No of Rooms",int(data.N_ROOM.min()),int(data.N_ROOM.max()))
 
@@ -91,14 +100,37 @@ if page == "Predict Price":
 
 
     if st.button(" Get Price",help="Click to predict the price"):
-        st.markdown("<h1 style='text-align: center; color: grey;'>Predicted House Price Range</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; color: Black;'>Predicted House Price Range</h1>", unsafe_allow_html=True)
         st.write("😀😀😀😀😀😀😀😀😀😀",  low , 'to', high   ,"😀😀😀😀😀😀😀😀😀")
-
+        st.snow()
 
 
 elif page == "Explore":
-    st.write('Area with Highest Sales')
-    fig=px.bar(data,x='AREA')
+    st.image(image,width=150)
+    st.write('**Area wise Sales**')
+    fig=px.bar(data,x='AREA',color='AREA')
+    fig.update_traces(marker_line_width = 0,selector=dict(type="bar"))
     st.plotly_chart(fig, use_container_width=True)
-else:
-   st.write('Display details of page 3')
+    expander = st.expander("Insights")
+    expander.write("""The chart above shows No of Sales happened in each Area respectively. As you can see 
+    **Chrompet** has made the most sales""")
+    st.write("**Sales happend based on Parking Facility**")
+    fig1=px.bar(data,x='AREA',barmode='group',color='PARK_FACIL')
+    fig1.update_traces(marker_line_width = 0,selector=dict(type="bar"))
+    st.plotly_chart(fig1, use_container_width=True)
+    expander = st.expander("Insights")
+    expander.write("""The chart above shows No of Sales made based on the parking facillity available. We can see that
+    there is no bias based on the parking facility""")
+    st.write("**Sales happend based on the Type of Building**")
+    fig2=px.bar(data,x='AREA',barmode='group',color='BUILDTYPE')
+    fig2.update_traces(marker_line_width = 0,selector=dict(type="bar"))
+    st.plotly_chart(fig2, use_container_width=True)
+    expander = st.expander("Insights")
+    expander.write("""The chart above shows No of Sales made based on the Building Type""")
+ 
+
+elif page == "Creator":
+    st.title('Creator Profile')
+    st.write('**App Creator:** Madhubala A')
+    st.write('**Mail Id:** madhu.masy@gmail.com')
+    st.write("**Linked In:** https://www.linkedin.com/in/madhubala-anbalagan/")
