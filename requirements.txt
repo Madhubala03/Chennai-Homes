@@ -7,4 +7,4 @@ streamlit==1.7.0
 click==8.0.4
 pickle5==0.0.11
 scikit-learn==1.0.2
-PIL
+Pillow==9.0.0
