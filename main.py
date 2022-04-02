@@ -10,28 +10,38 @@ model = pickle.load(open('model_pkl','rb'))
 image = Image.open('logo.jpg')
 st.sidebar.image(image,width=124)
 st.sidebar.title("ChennaiHomes")
+col1, col2 = st.columns( [0.5, 0.5])
+with col1:
+    st.title("ChennaiHomes")   
+with col2:
+    st.image(image,  width=150)
 page = st.sidebar.selectbox("Select One", ['Home',"Predict Price", "Explore",'Creator'])
 if page == "Home":
-    st.image(image,width=200)
     st.title('Welcome to ChennaiHomes')
-    st.subheader('ChennaiHomes is a place where you can explore the statistics of Sales happened in Chennai over the years 2013-2017 and also predict the price range of your Dream Homes')
+    st.subheader('ChennaiHomes is a platform where you can explore the statistics of Sales happened across Chennai over the years 2013-2017 and also predict the current price range of your Dream Homes')
 if page == "Predict Price":
-    st.image(image,width=200)
     st.title('Price Prediction')
     AREA = st.selectbox("Select an Area ",data.AREA.unique())
     if AREA == 'Chrompet':
+        grouped=data[data['AREA']=='Chrompet']
         AREA = 2
     elif AREA == 'Karapakkam':
+        grouped=data[data['AREA']=='Karapakkam']
         AREA  = 4
     elif AREA == 'KK Nagar':
+        grouped=data[data['AREA']=='KK Nagar']
         AREA = 3
     elif AREA == 'Anna Nagar':
+        grouped=data[data['AREA']=='Anna Nagar']
         AREA = 1
     elif AREA == 'Adyar':
+        grouped=data[data['AREA']=='Adyar']
         AREA = 0
     elif AREA == 'T Nagar':
+        grouped=data[data['AREA']=='T Nagar']
         AREA = 5
-    else:
+    elif AREA == 'Velachery':
+        grouped=data[data['AREA']=='Velachery']
         AREA = 6
 
     INT_SQFT = st.slider("SQFT Required",int(data.INT_SQFT.min()),int(data.INT_SQFT.max()))
@@ -49,7 +59,7 @@ if page == "Predict Price":
         PARK_FACIL = 0
 
     #Coverting MZZONe categorical to numerical
-    MZZONE = st.selectbox("Chennai Zone Preference",data.MZZONE.unique())
+    MZZONE = st.selectbox("Chennai Zone Preference",grouped.MZZONE.unique())
     if MZZONE == 'A':
         MZZONE = 0
     elif MZZONE == 'RH':
@@ -106,7 +116,6 @@ if page == "Predict Price":
 
 
 elif page == "Explore":
-    st.image(image,width=150)
     st.write('**Area wise Sales**')
     fig=px.bar(data,x='AREA',color='AREA')
     fig.update_traces(marker_line_width = 0,selector=dict(type="bar"))
@@ -114,6 +123,7 @@ elif page == "Explore":
     expander = st.expander("Insights")
     expander.write("""The chart above shows No of Sales happened in each Area respectively. As you can see 
     **Chrompet** has made the most sales""")
+
     st.write("**Sales happend based on Parking Facility**")
     fig1=px.bar(data,x='AREA',barmode='group',color='PARK_FACIL')
     fig1.update_traces(marker_line_width = 0,selector=dict(type="bar"))
@@ -121,6 +131,7 @@ elif page == "Explore":
     expander = st.expander("Insights")
     expander.write("""The chart above shows No of Sales made based on the parking facillity available. We can see that
     there is no bias based on the parking facility""")
+
     st.write("**Sales happend based on the Type of Building**")
     fig2=px.bar(data,x='AREA',barmode='group',color='BUILDTYPE')
     fig2.update_traces(marker_line_width = 0,selector=dict(type="bar"))
