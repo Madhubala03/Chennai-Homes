@@ -49,10 +49,6 @@ def main():
 
         N_BEDROOM = st.slider("No of Bedrooms",int(data.N_BEDROOM.min()),int(data.N_BEDROOM.max()))
 
-        N_BATHROOM = st.radio("No of Bathrooms",data.N_BATHROOM.unique())
-
-        N_ROOM = st.slider("No of Rooms",int(data.N_ROOM.min()),int(data.N_ROOM.max()))
-
         PARK_FACIL = st.radio("Parking Area",data.PARK_FACIL.unique())
         if PARK_FACIL == 'Yes':
             PARK_FACIL = 1
@@ -84,7 +80,6 @@ def main():
             BUILDTYPE = 0
         
         
-        
         STREET = st.selectbox("Access TO THE Building",data.STREET.unique())
 
         if STREET == 'Gravel':
@@ -94,7 +89,7 @@ def main():
         else:
             STREET = 1
 
-        input = pd.DataFrame([[INT_SQFT,BUILDTYPE,MZZONE,AREA,N_BEDROOM,PARK_FACIL,N_BATHROOM,STREET,N_ROOM]],columns=['INT_SQFT','BUILDTYPE','MZZONE','AREA','N_BEDROOM','PARK_FACIL',N_BATHROOM,STREET,N_ROOM],index=['index'])
+        input = pd.DataFrame([[INT_SQFT,BUILDTYPE,MZZONE,AREA,N_BEDROOM,PARK_FACIL,STREET]],columns=['INT_SQFT','BUILDTYPE','MZZONE','AREA','N_BEDROOM','PARK_FACIL',STREET],index=['index'])
                             
                             
         #st.dataframe(input)
